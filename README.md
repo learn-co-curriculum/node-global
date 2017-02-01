@@ -123,8 +123,8 @@ Note: If we don't use `var` the variable will be a `window` as well.
 So if you run this code in the DevTools console:
 
 ```js
-user = {admin: false}
 var _user = {admin: false}
+user = {admin: false}
 
 console.log(_user, window._user)
 console.log(user, window.user)
