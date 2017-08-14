@@ -116,73 +116,64 @@ console.log(name) // React Quickly
 
 This is explicit global scoping because we wrote `global.name`. This variable becomes available not only in the current script, but in all other scripts which this instance uses. For example you can set the global name variable in the main script and it will be accessible in imported modules. Let's explore implicit global scoping.
 
-When it comes to scoping, browser JavaScript was notorious for its "buggy" behavior of leaking variables into a global scope. For example, if `var _user = {admin: false}` code is run in DevTools `var user` will create a global object `window._user`.
+When it comes to scoping, browser JavaScript was notorious for its "buggy" behavior of leaking variables into a global scope. For example, if the `var _user = { admin: false }` code is run in DevTools, `var _user` will create a property on the global object, `window._user`.
 
-Note: If we don't use `var` the variable will be a `window` as well.
+Note: If we don't use `var`, the variable will be a property on `window` as well.
 
 So if you run this code in the DevTools console:
-
 ```js
-var _user = {admin: false}
-user = {admin: false}
+var _user = { admin: false }
+user = { admin: false }
 
 console.log(_user, window._user)
 console.log(user, window.user)
 ```
 
-You would get these results which illustrate that global window references were created:
-
+You would get these results which illustrate that global `window` references were created:
 ```
-Object {admin: false} Object {admin: false} Object {admin: false}
-Object {admin: false} Object {admin: false} Object {admin: false}
+Object { admin: false } Object { admin: false } Object { admin: false }
+Object { admin: false } Object { admin: false } Object { admin: false }
 ```
 
-In other words `_user`, `window._user`, `user` and `window.user` will return `{admin: false}`.
+In other words `_user`, `window._user`, `user` and `window.user` will return `{ admin: false }`.
 
-Now let's replace `window` with global for Node. What would the result of this snippet be if you run it as a separate file (`node main.js`)?
+Now let's replace `window` with `global` for Node. What would the result of this snippet be if you ran it as a separate file (`node main.js`)?
 
 ```js
-user = {admin: false}
-var _user = {admin: false}
+var _user = { admin: false }
+user = { admin: false }
 
 console.log(_user, global._user, GLOBAL._user)
 console.log(user, global.user, GLOBAL.user)
 ```
 
-The result will signify that the `var _user` did not create a global reference, only a local one.
-
+The result will show that `var _user` did not create a global reference, only a local one:
 ```
 { admin: false } undefined undefined
-{ admin: false }  { admin: false }
+{ admin: false } { admin: false } { admin: false }
 ```
 
-In other words,
-
-* `console.log(_user)` returns `{ admin: false}`
+In other words...
+* `console.log(_user)` returns `{ admin: false }`
 * `console.log(global._user)` and `console.log(GLOBAL._user)` return `undefined`
 
-While,
+and...
+* `console.log(user)` returns `{ admin: false }`
+* `console.log(global.user)` and `console.log(GLOBAL.user)` return `{ admin: false }`
 
-* `console.log(user)` returns `{ admin: false}`
-* `console.log(global.user)` and `console.log(GLOBAL.user)` return { admin: false }
+`var _user = { admin: false }` did not create a global reference because we ran the code in Node as a separate file. This is one of the differences between JavaScript in the browser and Node.
 
-`var _user = {admin: false}` did not create a global reference because we run the code in Node and it was a file. This is one of the differences between Node and browser JavaScript.
+Note: If you run the Node code in REPL, the result will be similar to browser-based JavaScript, i.e., the `global._user` will be created, because REPL works in a global scope.
 
-Note: If you run the Node code in REPL, the result will be similar to browser JavaScript, i.e., the `global._user` will be created, because REPL works in a global scope.
-
-The conclusion: In Node, if you omit `var`, the global reference will be created implicitly. This can cause confusion so therefore, avoid doing implicit declarations. If you need to create a global reference, use explicit declaration `global.NAME = VALUE`.
-
+The conclusion: In Node, if you omit `var`, the global reference will be created implicitly. This can cause confusion, so therefore, avoid doing implicit declarations. If you need to create a global reference, use an explicit declaration like `global.NAME = VALUE`.
 
 ## Resources
 
 1. [Official Global Object Documentation](https://nodejs.org/api/globals.html)
-1. [Global Variables in Node.js](http://www.hacksparrow.com/global-variables-in-node-js.html)
-1. [Variables: Scopes, Environments, and Closures in Browser JavaScript](http://speakingjs.com/es5/ch16.html)
-2. [Node.js Global Namespace video](https://egghead.io/lessons/node-js-node-js-global-namespace)
-
+2. [Global Variables in Node.js](http://www.hacksparrow.com/global-variables-in-node-js.html)
+3. [Variables: Scopes, Environments, and Closures in Browser JavaScript](http://speakingjs.com/es5/ch16.html)
+4. [Node.js Global Namespace video](https://egghead.io/lessons/node-js-node-js-global-namespace)
 
 ---
 
-<p data-visibility='hidden'>View <a href='https://learn.co/lessons/node-global' title='node-global'>node-global</a> on Learn.co and start learning to code for free.</p>
-
-<p class='util--hide'>View <a href='https://learn.co/lessons/node-global'>Node Global Object</a> on Learn.co and start learning to code for free.</p>
+<p data-visibility='hidden'>View <a href='https://learn.co/lessons/node-global'>Node Global Object</a> on Learn.co and start learning to code for free.</p>
