@@ -131,8 +131,8 @@ console.log(user, window.user)
 
 You would get these results which illustrate that global `window` references were created:
 ```
-Object { admin: false } Object { admin: false } Object { admin: false }
-Object { admin: false } Object { admin: false } Object { admin: false }
+Object { admin: false } Object { admin: false }
+Object { admin: false } Object { admin: false }
 ```
 
 In other words `_user`, `window._user`, `user` and `window.user` will return `{ admin: false }`.
